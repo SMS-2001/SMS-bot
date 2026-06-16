@@ -1,13 +1,13 @@
 from flask import Flask, render_template, request, jsonify
 import os
 import re
-from openai import OpenAI
+from google import genai
 
 app = Flask(__name__)
 
-# 🔑 API KEY
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-
+# 🔑 GEMINI API CLIENT
+# यह अपने आप आपके सिस्टम या Render से "GEMINI_API_KEY" नाम का एनवायरनमेंट वेरिएबल उठा लेगा
+client = genai.Client()
 
 @app.route("/")
 def home():
@@ -56,15 +56,13 @@ def chat():
         prompt = "You are a helpful Indian student tutor. Explain simply in Hindi:\n" + user_msg
 
     try:
-        response = client.chat.completions.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": "system", "content": "You are a helpful AI teacher for Indian students."},
-                {"role": "user", "content": prompt}
-            ]
+        # 🤖 Gemini 2.5 Flash मॉडल का उपयोग (यह बहुत तेज़ और मुफ़्त/सस्ता है)
+        response = client.models.generate_content(
+            model='gemini-2.5-flash',
+            contents=prompt,
         )
 
-        reply = response.choices[0].message.content
+        reply = response.text
 
         if not reply:
             reply = "AI empty response 😢"
@@ -78,3 +76,4 @@ def chat():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
+    
