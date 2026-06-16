@@ -67,10 +67,8 @@ def chat():
 
         reply = response.choices[0].message.content
 
-    except Exception:
-        reply = "AI not responding 😢"
-
-    return jsonify({"reply": reply})
+    except Exception as e:
+    return jsonify({"reply": str(e)})
 
 
 if __name__ == "__main__":
