@@ -7,7 +7,8 @@ app = Flask(__name__)
 
 # 🔑 GEMINI API CLIENT
 # यह अपने आप आपके सिस्टम या Render से "GEMINI_API_KEY" नाम का एनवायरनमेंट वेरिएबल उठा लेगा
-client = genai.Client()
+api_key = os.getenv("GEMINI_API_KEY") or os.getenv("OPENAI_API_KEY")
+client = genai.Client(api_key=api_key)
 
 @app.route("/")
 def home():
